@@ -1,0 +1,97 @@
+{
+  "before_response": "HTTP/1.1 500 Internal Server Error\ndate: Mon, 05 Oct 2026 21:27:15 GMT\nserver: uvicorn\ncontent-length: 21\ncontent-type: text/plain; charset=utf-8\n\nInternal Server Error",
+  "grafana_rules": {
+    "status": "success",
+    "data": {
+      "groups": [
+        {
+          "name": "order-errors",
+          "file": "Order Tracker",
+          "folderUid": "bg0cibavvp81sf",
+          "rules": [
+            {
+              "state": "firing",
+              "name": "Order lookup server errors",
+              "query": "sum(increase(order_lookup_requests_total{http_route=\"/api/orders/{order_id}\",http_response_status_code=~\"5..\"}[5m])) or vector(0)",
+              "annotations": {
+                "__dashboardUid__": "orders",
+                "__panelId__": "2",
+                "dashboard": "http://localhost:3000/d/orders",
+                "endpoint": "/api/orders/{order_id}",
+                "summary": "Order lookup returned a server error",
+                "window": "5m"
+              },
+              "activeAt": "2026-10-05T21:27:30Z",
+              "alerts": [
+                {
+                  "labels": {
+                    "alertname": "Order lookup server errors",
+                    "grafana_folder": "Order Tracker",
+                    "service": "order-tracker"
+                  },
+                  "annotations": {
+                    "__dashboardUid__": "orders",
+                    "__panelId__": "2",
+                    "dashboard": "http://localhost:3000/d/orders",
+                    "endpoint": "/api/orders/{order_id}",
+                    "summary": "Order lookup returned a server error",
+                    "window": "5m"
+                  },
+                  "state": "Alerting",
+                  "activeAt": "2026-10-05T21:27:30Z",
+                  "value": "1e+00"
+                }
+              ],
+              "totals": {
+                "alerting": 1
+              },
+              "totalsFiltered": {
+                "alerting": 1
+              },
+              "uid": "order-lookup-5xx",
+              "folderUid": "bg0cibavvp81sf",
+              "labels": {
+                "service": "order-tracker"
+              },
+              "health": "ok",
+              "type": "alerting",
+              "lastEvaluation": "2026-10-05T21:28:40Z",
+              "evaluationTime": 0.014131471
+            }
+          ],
+          "totals": {
+            "firing": 1
+          },
+          "interval": 10,
+          "lastEvaluation": "2026-10-05T21:28:40Z",
+          "evaluationTime": 0.014131471
+        }
+      ],
+      "totals": {
+        "firing": 1
+      }
+    }
+  },
+  "received_alert": {
+    "status": "firing",
+    "labels": {
+      "alertname": "Order lookup server errors",
+      "grafana_folder": "Order Tracker",
+      "service": "order-tracker"
+    },
+    "annotations": {
+      "dashboard": "http://localhost:3000/d/orders",
+      "endpoint": "/api/orders/{order_id}",
+      "summary": "Order lookup returned a server error",
+      "window": "5m"
+    },
+    "startsAt": "2026-10-05T21:27:30Z",
+    "fingerprint": "36018448bef75dba"
+  },
+  "agent_status": {
+    "state": "completed",
+    "exit_code": 0
+  },
+  "repair_verified": false,
+  "blocker": "Nested sandbox: sandbox-exec: sandbox_apply: Operation not permitted"
+}

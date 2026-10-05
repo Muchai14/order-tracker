@@ -33,3 +33,37 @@ def test_create_and_update_order(client):
 
 def test_missing_order(client):
     assert client.get("/api/orders/missing").status_code == 404
+
+
+@pytest.mark.parametrize(
+    ("created_at", "expected_delivery"),
+    [
+        ("2026-09-30T14:30:00+00:00", "2026-10-02"),
+        ("2026-01-30T14:30:00+00:00", "2026-02-01"),
+        ("2026-01-31T14:30:00+00:00", "2026-02-02"),
+        ("2026-02-28T14:30:00+00:00", "2026-03-02"),
+        ("2024-02-28T14:30:00+00:00", "2024-03-01"),
+        ("2024-02-29T14:30:00+00:00", "2024-03-02"),
+        ("2026-12-31T14:30:00+00:00", "2027-01-02"),
+        ("2026-10-05T14:30:00+00:00", "2026-10-07"),
+    ],
+)
+def test_express_lookup_delivery_date(client, created_at, expected_delivery):
+    with main.connect() as db:
+        db.execute(
+            "UPDATE orders SET created_at = ? WHERE id = ?",
+            (created_at, "express-1002"),
+        )
+
+    response = client.get("/api/orders/express-1002")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "id": "express-1002",
+        "customer": "Sam",
+        "item": "Headphones",
+        "priority": "express",
+        "status": "preparing",
+        "created_at": created_at,
+        "estimated_delivery": expected_delivery,
+    }

@@ -8,6 +8,7 @@ services:
       - "127.0.0.1:${ORDER_TRACKER_PORT:-8000}:8000"
     environment:
       ORDER_DB_PATH: /data/orders.db
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://collector:4318
     volumes:
       - orders:/data
     restart: unless-stopped
@@ -17,8 +18,57 @@ services:
       timeout: 3s
       retries: 12
 
+  collector:
+    image: otel/opentelemetry-collector-contrib:0.123.0
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes: ["./observability/collector.yaml:/etc/otelcol/config.yaml:ro"]
+  prometheus:
+    image: prom/prometheus:v3.2.1
+    volumes:
+      - ./observability/prometheus.yaml:/etc/prometheus/prometheus.yml:ro
+      - prometheus:/prometheus
+    ports: ["127.0.0.1:9090:9090"]
+  loki:
+    image: grafana/loki:3.4.2
+    command: ["-config.file=/etc/loki/config.yaml"]
+    volumes:
+      - ./observability/loki.yaml:/etc/loki/config.yaml:ro
+      - loki:/loki
+    ports: ["127.0.0.1:3100:3100"]
+  tempo-init:
+    image: order-tracker:${ORDER_TRACKER_TAG:-local}
+    build: .
+    user: "0:0"
+    command: ["python", "-c", "import os; os.chown('/tempo-data', 10001, 10001)"]
+    volumes: ["tempo:/tempo-data"]
+    restart: "no"
+  tempo:
+    depends_on:
+      tempo-init:
+        condition: service_completed_successfully
+    image: grafana/tempo:2.7.2
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./observability/tempo.yaml:/etc/tempo.yaml:ro
+      - tempo:/tmp/tempo
+    ports: ["127.0.0.1:3200:3200"]
+  grafana:
+    image: grafana/grafana:11.6.0
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-homework-local}
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana:/var/lib/grafana
+    ports: ["127.0.0.1:3000:3000"]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+
 volumes:
   orders:
+  prometheus:
+  loki:
+  tempo:
+  grafana:
 
 networks:
   default:

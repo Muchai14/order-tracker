@@ -1,0 +1,40 @@
+evaluation_interval: 1m
+tests:
+  - name: No error series stays normal
+    interval: 1m
+    input_series: []
+    promql_expr_test:
+      - expr: '(sum(increase(order_lookup_requests_total{http_route="/api/orders/{order_id}",http_response_status_code=~"5.."}[5m])) or vector(0)) > bool 0'
+        eval_time: 5m
+        exp_samples:
+          - labels: '{}'
+            value: 0
+  - name: A 404 does not fire a 5xx alert
+    interval: 1m
+    input_series:
+      - series: 'order_lookup_requests_total{http_route="/api/orders/{order_id}",http_response_status_code="404"}'
+        values: '0+1x10'
+      - series: 'order_lookup_requests_total{http_route="/api/orders/{order_id}",http_response_status_code="500"}'
+        values: '0+0x10'
+    promql_expr_test:
+      - expr: '(sum(increase(order_lookup_requests_total{http_route="/api/orders/{order_id}",http_response_status_code=~"5.."}[5m])) or vector(0)) > bool 0'
+        eval_time: 5m
+        exp_samples:
+          - labels: '{}'
+            value: 0
+  - name: A server error fires and later resolves
+    interval: 1m
+    input_series:
+      - series: 'order_lookup_requests_total{http_route="/api/orders/{order_id}",http_response_status_code="500"}'
+        values: '0 0 1 1 1 1 1 1 1'
+    promql_expr_test:
+      - expr: '(sum(increase(order_lookup_requests_total{http_route="/api/orders/{order_id}",http_response_status_code=~"5.."}[5m])) or vector(0)) > bool 0'
+        eval_time: 2m
+        exp_samples:
+          - labels: '{}'
+            value: 1
+      - expr: '(sum(increase(order_lookup_requests_total{http_route="/api/orders/{order_id}",http_response_status_code=~"5.."}[5m])) or vector(0)) > bool 0'
+        eval_time: 8m
+        exp_samples:
+          - labels: '{}'
+            value: 0

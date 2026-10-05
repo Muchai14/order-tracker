@@ -1,0 +1,20 @@
+{
+  "job_id": "20261005T142456-cc4b3180",
+  "status": {
+    "state": "completed",
+    "exit_code": 0
+  },
+  "alert": {
+    "status": "firing",
+    "labels": {
+      "alertname": "ResponderTest",
+      "test": "true"
+    },
+    "annotations": {
+      "summary": "Test notification; no incident to fix"
+    },
+    "startsAt": "",
+    "fingerprint": ""
+  },
+  "last_line": "Acknowledged `ResponderTest` (`test: true`). Supplied telemetry shows zero values for 404 and 500 responses, with no logs or traces returned. No incident to fix. No tools run or files accessed or modified."
+}

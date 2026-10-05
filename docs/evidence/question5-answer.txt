@@ -1,0 +1,1 @@
+Acknowledged `ResponderTest` (`test: true`). Supplied telemetry shows zero values for 404 and 500 responses, with no logs or traces returned. No incident to fix. No tools run or files accessed or modified.

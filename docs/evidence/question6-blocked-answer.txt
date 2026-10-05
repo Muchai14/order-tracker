@@ -1,0 +1,5 @@
+Blocked by the execution environment: repository inspection and `.venv/bin/pytest -q -s` both failed before execution with `sandbox-exec: sandbox_apply: Operation not permitted`.
+
+The supplied traceback points to `app/main.py:60`: `placed_at.replace(day=placed_at.day + 2)` creates an invalid date near month end, causing the lookup’s HTTP 500. The likely minimal fix is `placed_at + timedelta(days=2)`, with regression tests covering month, year, and leap-year boundaries.
+
+I could not verify the local source, reproduce the failure, implement the fix, or run tests. No files, telemetry, or alerts were changed; nothing was committed, pushed, or deployed.

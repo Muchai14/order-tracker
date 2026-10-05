@@ -1,0 +1,8 @@
+Fixed the order lookup failure.
+
+- **Root cause:** `app/main.py:60` used `replace(day=day + 2)` for express delivery estimates, producing invalid dates at month boundaries and matching the reported `ValueError`.
+- **Fix:** Replaced it with `placed_at + timedelta(days=2)`.
+- **Regression tests:** Added eight API cases covering ordinary dates, month-end, leap years, and year-end. Before the fix, seven reproduced the exception.
+- **Validation:** `.venv/bin/pytest -q -s` — **15 passed**, 3 dependency deprecation warnings. `git diff --check` passed.
+
+Preserved existing changes. No commits, pushes, deployments, or telemetry/alert modifications.

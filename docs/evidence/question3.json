@@ -1,0 +1,133 @@
+{
+  "http_status": 404,
+  "metric": [
+    {
+      "metric": {
+        "__name__": "order_lookup_requests_total",
+        "exported_instance": "148bcfc5-26d3-49b7-8d2f-e6b5eae5b3f7",
+        "exported_job": "order-tracker",
+        "http_request_method": "GET",
+        "http_response_status_code": "404",
+        "http_route": "/api/orders/{order_id}",
+        "instance": "collector:8889",
+        "job": "order-tracker"
+      },
+      "value": [
+        1791234857.094,
+        "2"
+      ]
+    }
+  ],
+  "logs": [
+    {
+      "stream": {
+        "code_file_path": "/app/app/telemetry.py",
+        "code_function_name": "__call__",
+        "code_line_number": "63",
+        "detected_level": "info",
+        "flags": "3",
+        "http_request_method": "GET",
+        "http_response_status_code": "404",
+        "http_route": "/api/orders/{order_id}",
+        "observed_timestamp": "1791234844819881302",
+        "scope_name": "order-tracker",
+        "service_instance_id": "148bcfc5-26d3-49b7-8d2f-e6b5eae5b3f7",
+        "service_name": "order-tracker",
+        "severity_number": "9",
+        "severity_text": "INFO",
+        "span_id": "3126581998d75b6f",
+        "telemetry_sdk_language": "python",
+        "telemetry_sdk_name": "opentelemetry",
+        "telemetry_sdk_version": "1.45.0",
+        "trace_id": "9a33529d1c7f7ab229dcee189a03a26f",
+        "url_path": "/api/orders/standard-1002"
+      },
+      "values": [
+        [
+          "1791234844819779072",
+          "Order lookup completed"
+        ]
+      ]
+    }
+  ],
+  "trace_id": "9a33529d1c7f7ab229dcee189a03a26f",
+  "trace": {
+    "batches": [
+      {
+        "resource": {
+          "attributes": [
+            {
+              "key": "telemetry.sdk.language",
+              "value": {
+                "stringValue": "python"
+              }
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "value": {
+                "stringValue": "opentelemetry"
+              }
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "value": {
+                "stringValue": "1.45.0"
+              }
+            },
+            {
+              "key": "service.instance.id",
+              "value": {
+                "stringValue": "148bcfc5-26d3-49b7-8d2f-e6b5eae5b3f7"
+              }
+            },
+            {
+              "key": "service.name",
+              "value": {
+                "stringValue": "order-tracker"
+              }
+            }
+          ]
+        },
+        "scopeSpans": [
+          {
+            "scope": {
+              "name": "app.telemetry"
+            },
+            "spans": [
+              {
+                "traceId": "mjNSnRx/erIp3O4YmgOibw==",
+                "spanId": "MSZYGZjXW28=",
+                "name": "GET /api/orders/{order_id}",
+                "kind": "SPAN_KIND_SERVER",
+                "startTimeUnixNano": "1791234844813934302",
+                "endTimeUnixNano": "1791234844820069968",
+                "attributes": [
+                  {
+                    "key": "http.route",
+                    "value": {
+                      "stringValue": "/api/orders/{order_id}"
+                    }
+                  },
+                  {
+                    "key": "http.request.method",
+                    "value": {
+                      "stringValue": "GET"
+                    }
+                  },
+                  {
+                    "key": "http.response.status_code",
+                    "value": {
+                      "intValue": "404"
+                    }
+                  }
+                ],
+                "status": {}
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "verified_via": "Grafana data source proxies"
+}
